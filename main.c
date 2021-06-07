@@ -6,7 +6,7 @@
 /*   By: fbouibao <fbouibao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/01 16:13:00 by fbouibao          #+#    #+#             */
-/*   Updated: 2021/06/06 17:19:14 by fbouibao         ###   ########.fr       */
+/*   Updated: 2021/06/07 19:33:21 by fbouibao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,22 @@
 # include <stdlib.h>
 # include "libft1/libft.h"
 
-typedef struct s_filerdr
+typedef struct s_pushswap
 {
-	char				stack_a;
-	int					stack_b;
-	int					stack_c;
-}					t_filerdr;
+	int	i;
+	int	*ta;
+	int	*tb;
+	int	*tc;
+	int	idx;
+	int len_ta;
+	int len_tb;
+	int len_tc;
+	int nbr_p;
+	int nbr_g;
+	int index_of_nbr;
+	int total_instrc;
+	int group_nbrs;
+}					t_pushswap;
 
 int	check_args(char **av)
 {
@@ -115,12 +125,13 @@ void	swap_stack(int len, int ta[len])
 	ta[1] = swap;
 }
 
-void	rotate_stack(int len, int ta[len])
+void	reverse_rotate_stack(int len, int ta[len])
 {
 	int swap;
 	int i;
 
 	swap = ta[len - 1];
+	
 	i = len;
 	while (--i > 0)
 	{
@@ -129,7 +140,7 @@ void	rotate_stack(int len, int ta[len])
 	ta[0] = swap;
 }
 
-void	reverse_rotate_stack(int len, int ta[len])
+void	rotate_stack(int len, int ta[len])
 {
 	int swap;
 	int i;
@@ -153,63 +164,211 @@ void	push_stack(int *len, int ta[*len], int *lenb, int tb[*lenb])
 	while (++i < *len - 1)
 		ta[i] = ta[i + 1];
 	(*len)--;
-	i = *lenb;
+	i = *lenb + 1;
 	while (--i > 0)
 		tb[i] = tb[i - 1];
 	tb[0] = push;
 	(*lenb)++;
 }
 
+int	get_index_of_nbr(int len, int ta[len], t_pushswap *all)
+{
+	int i;
+
+	i = -1;
+	while (++i < len)
+	{
+		if (ta[i] == all->tc[all->idx])
+			return (i);
+	}
+	return (-1);
+}
+
+t_pushswap	*new_vrbs(int ac, char **av)
+{
+	t_pushswap	*all;
+
+	all = malloc(sizeof(t_pushswap));
+	all->ta = malloc(sizeof(int) * ac);
+	all->tb = malloc(sizeof(int) * ac);
+	all->tc = malloc(sizeof(int) * ac);
+	all->len_ta = ac - 1;
+	all->len_tb = 0;
+	all->len_tc = ac - 1;
+	all->total_instrc = 0;
+	return (all);
+}
+
+void	less_20(t_pushswap *all)
+{
+	all->idx = 0;
+	all->nbr_p = all->len_ta;
+	while (all->nbr_p > 0)
+	{
+		if (all->ta[0] == all->tc[all->idx])
+		{
+			push_stack(&all->len_ta, all->ta, &all->len_tb, all->tb);
+			write(1, "pb\n", 3);
+			all->total_instrc++;
+			all->idx++;
+			all->nbr_p--;
+			continue ;
+		}
+		all->index_of_nbr = get_index_of_nbr(all->len_ta, all->ta, all);
+		if (all->index_of_nbr <= (all->len_ta - all->index_of_nbr))
+		{
+			rotate_stack(all->len_ta, all->ta);
+			write(1, "ra\n", 3);
+			all->total_instrc++;
+		}
+		else
+		{
+			reverse_rotate_stack(all->len_ta, all->ta);
+			write(1, "rra\n", 4);
+			all->total_instrc++;
+		}
+	}
+
+	all->nbr_p = all->len_tb;
+	while (all->nbr_p > 0)
+	{
+		push_stack(&(all->len_tb), all->tb, &(all->len_ta), all->ta);
+		write(1, "pa\n", 3);
+		all->total_instrc++;
+		all->nbr_p--;
+	}
+}
+
+int		check_nbr_in_list(t_pushswap *all, int nbr)
+{
+	int i;
+
+	i = (all->group_nbrs * all->nbr_g) - all->group_nbrs * all->nbr_g - 1;
+	while (++i < all->len_tc && i < all->group_nbrs * all->nbr_g)
+	{
+		if (all->tc[i] == nbr)
+			return (1);
+	}
+	return (0);
+}
+
+void	less_150(t_pushswap *all)
+{
+	all->group_nbrs = 1;
+	int i = 0;
+	int j = all->len_ta;
+	all->idx = 0;
+	all->nbr_p = 4;
+	all->nbr_g = 4;
+	while (all->nbr_p > 0)
+	{
+		if (all->len_ta <= 0)
+			break ;
+		if (check_nbr_in_list(all, all->ta[0]))
+		{
+			push_stack(&all->len_ta, all->ta, &all->len_tb, all->tb);
+			all->total_instrc++;
+			all->idx++;
+			all->nbr_p--;
+			if (all->nbr_p == 0)
+			{
+				all->group_nbrs++;
+				all->nbr_p = 4;
+			}
+			continue ;
+		}
+		
+		if (i < j && check_nbr_in_list(all, all->ta[++i]))
+		{
+			rotate_stack(all->len_ta, all->ta);
+			// printf("\nstack a\n");
+			// all->i = -1;
+			// while (++all->i < all->len_ta)
+			// {
+			// 	ft_putnbr_fd(all->ta[all->i], 1);
+			// 	ft_putchar_fd(' ', 1);
+			// }
+			i = 0;
+			j = all->len_ta;
+		}
+		else if (i < j && check_nbr_in_list(all, all->ta[--j]))
+		{
+			reverse_rotate_stack(all->len_ta, all->ta);
+			// printf("\nstack b\n");
+			// all->i = -1;
+			// while (++all->i < all->len_ta)
+			// {
+			// 	ft_putnbr_fd(all->ta[all->i], 1);
+			// 	ft_putchar_fd(' ', 1);
+			// }
+			i = 0;
+			j = all->len_ta;
+		}
+	}
+
+	// all->nbr_p = all->len_tb;
+	// while (all->nbr_p > 0)
+	// {
+	// 	push_stack(&(all->len_tb), all->tb, &(all->len_ta), all->ta);
+	// 	write(1, "pa\n", 3);
+	// 	all->total_instrc++;
+	// 	all->nbr_p--;
+	// }
+}
+
 int	main(int ac, char *av[])
 {
-	int	i = -1;
-	int	ta[ac];
-	int	tb[ac];
-	int	tc[ac];
-	int len_ta;
-	int len_tb;
-	int len_tc;
-	
-	
-	
+	t_pushswap	*all;
 
+	all = new_vrbs(ac, av);
 	if (ac > 1)
 	{
-		len_ta = ac - 1;
-		len_tb = 0;
-		len_tc = ac - 1;
-		rmp_t(av, ac, ta);
-		rmp_t(av, ac, tc);
-		sort_tc(len_tc, tc);
+		rmp_t(av, ac, all->ta);
+		rmp_t(av, ac, all->tc);
+		sort_tc(all->len_tc, all->tc);
+		if (all->len_ta < 20)
+		{
+			less_20(all);
+		}
+		else if (all->len_ta < 150)
+		{
+			less_150(all);
+		}
 
-		//swap_stack(len_ta, ta);
+
+
+
+		
+		// swap_stack(len_ta, ta);
 		// rotate_stack(len_ta, ta);
 		// reverse_rotate_stack(len_ta, ta);
-		push_stack(&len_ta, ta, &len_tb, tb);
-		printf("stack a\n");
-		while (++i < len_ta)
-		{
-			printf("%d\n", ta[i]);
-		}
+		// push_stack(&len_ta, ta, &len_tb, tb);
+		// push_stack(&len_ta, ta, &len_tb, tb);
+		// printf("stack a\n");
+		// while (++i < len_ta)
+		// {
+		// 	printf("%d\n", ta[i]);
+		// }
+		// printf("\nstack b\n");
+		// i = -1;
+		// while (++i < len_tb)
+		// {
+		// 	printf("%d\n", tb[i]);
+		// }
+		// push_stack(&len_tb, tb, &len_ta, ta);
+		// printf("stack a\n");
+		// all->i = -1;
+		// while (++all->i < all->len_ta)
+		// {
+		// 	printf("%d\n", all->ta[all->i]);
+		// }
 		printf("\nstack b\n");
-		i = -1;
-		while (++i < len_tb)
+		all->i = -1;
+		while (++all->i < all->len_tb)
 		{
-			printf("%d\n", tb[i]);
+			printf("%d\n", all->tb[all->i]);
 		}
-		push_stack(&len_tb, tb, &len_ta, ta);
-		printf("stack a\n");
-		i = -1;
-		while (++i < len_ta)
-		{
-			printf("%d\n", ta[i]);
-		}
-		printf("\nstack b\n");
-		i = -1;
-		while (++i < len_tb)
-		{
-			printf("%d\n", tb[i]);
-		}
+		//printf("total instruction : %d", all->total_instrc);
 	}
 	else
 	{

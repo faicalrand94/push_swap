@@ -1,0 +1,16 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug",
+            "program": "${workspaceFolder}/a.out",
+            "args": ["20", "50", "2", "34", "267", "7", "850", "12", "43", "1", "70", "68", "47", "95", "3", "75", "99999", "6", "800", "56", "42", "67", "24"],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
