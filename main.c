@@ -199,6 +199,39 @@ t_pushswap	*new_vrbs(int ac, char **av)
 	return (all);
 }
 
+void	less_5(t_pushswap *all)
+{
+	if (all->len_tc == 2)
+	{
+		if (all->ta[0] > all->ta[1])
+		{
+			write(1, "sa\n", 3);
+		}
+	}
+	else if (all->len_tc == 3)
+	{
+		all->idx = all->len_tc - 1;
+		all->index_of_nbr = get_index_of_nbr(all->len_ta, all->ta, all);
+		if (all->index_of_nbr == 0)
+		{
+			rotate_stack(all->len_ta, all->ta);
+			write(1, "ra\n", 3);
+			all->total_instrc++;
+		}
+		else if (all->index_of_nbr == 1)
+		{
+			reverse_rotate_stack(all->len_ta, all->ta);
+			write(1, "rra\n", 4);
+			all->total_instrc++;
+		}
+		if (all->ta[0] > all->ta[1])
+		{
+			write(1, "sa\n", 3);
+		}
+	}
+
+}
+
 void	less_20(t_pushswap *all)
 {
 	all->idx = 0;
@@ -404,7 +437,11 @@ int	main(int ac, char *av[])
 		rmp_t(av, ac, all->ta);
 		rmp_t(av, ac, all->tc);
 		sort_tc(all->len_tc, all->tc);
-		if (all->len_ta < 20)
+		if (all->len_ta < 5)
+		{
+			less_5(all);
+		}
+		else if (all->len_ta < 20)
 		{
 			less_20(all);
 		}
