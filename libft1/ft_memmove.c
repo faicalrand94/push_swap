@@ -16,11 +16,9 @@ void	*ft_memmove(void *dst, const void *src, size_t numbpyt)
 {
 	char			*p1;
 	char			*p2;
-	size_t			j;
 
 	p1 = (char *)dst;
 	p2 = (char *)src;
-	j = 0;
 	if (p1 == p2)
 		return (p1);
 	if (p1 < p2)

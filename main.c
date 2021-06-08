@@ -258,8 +258,8 @@ void	less_150(t_pushswap *all)
 	int i = 0;
 	int j = all->len_ta;
 	all->idx = 0;
-	all->nbr_p = 4;
-	all->nbr_g = 4;
+	all->nbr_p = all->len_ta / 6;
+	all->nbr_g = all->len_ta / 6;
 	while (all->nbr_p > 0)
 	{
 		if (all->len_ta <= 0)
@@ -267,13 +267,14 @@ void	less_150(t_pushswap *all)
 		if (check_nbr_in_list(all, all->ta[0]))
 		{
 			push_stack(&all->len_ta, all->ta, &all->len_tb, all->tb);
+			write(1, "pb\n", 3);
 			all->total_instrc++;
 			all->idx++;
 			all->nbr_p--;
 			if (all->nbr_p == 0)
 			{
 				all->group_nbrs++;
-				all->nbr_p = 4;
+				all->nbr_p = all->nbr_g;
 			}
 			continue ;
 		}
@@ -281,39 +282,116 @@ void	less_150(t_pushswap *all)
 		if (i < j && check_nbr_in_list(all, all->ta[++i]))
 		{
 			rotate_stack(all->len_ta, all->ta);
-			// printf("\nstack a\n");
-			// all->i = -1;
-			// while (++all->i < all->len_ta)
-			// {
-			// 	ft_putnbr_fd(all->ta[all->i], 1);
-			// 	ft_putchar_fd(' ', 1);
-			// }
+			write(1, "ra\n", 3);
 			i = 0;
 			j = all->len_ta;
 		}
 		else if (i < j && check_nbr_in_list(all, all->ta[--j]))
 		{
 			reverse_rotate_stack(all->len_ta, all->ta);
-			// printf("\nstack b\n");
-			// all->i = -1;
-			// while (++all->i < all->len_ta)
-			// {
-			// 	ft_putnbr_fd(all->ta[all->i], 1);
-			// 	ft_putchar_fd(' ', 1);
-			// }
+			write(1, "rra\n", 4);
 			i = 0;
 			j = all->len_ta;
 		}
 	}
+	all->idx = all->len_tc - 1;
+	all->nbr_p = all->len_tc;
+	while (all->nbr_p > 0)
+	{
+		if (all->tb[0] == all->tc[all->idx])
+		{
+			push_stack(&all->len_tb, all->tb, &all->len_ta, all->ta);
+			write(1, "pa\n", 3);
+			all->total_instrc++;
+			all->idx--;
+			all->nbr_p--;
+			continue ;
+		}
+		all->index_of_nbr = get_index_of_nbr(all->len_tb, all->tb, all);
+		if (all->index_of_nbr <= (all->len_tb - all->index_of_nbr))
+		{
+			rotate_stack(all->len_tb, all->tb);
+			write(1, "rb\n", 3);
+			all->total_instrc++;
+		}
+		else
+		{
+			reverse_rotate_stack(all->len_tb, all->tb);
+			write(1, "rrb\n", 4);
+			all->total_instrc++;
+		}
+	}
+}
 
-	// all->nbr_p = all->len_tb;
-	// while (all->nbr_p > 0)
-	// {
-	// 	push_stack(&(all->len_tb), all->tb, &(all->len_ta), all->ta);
-	// 	write(1, "pa\n", 3);
-	// 	all->total_instrc++;
-	// 	all->nbr_p--;
-	// }
+void	more_150(t_pushswap *all)
+{
+	all->group_nbrs = 1;
+	int i = 0;
+	int j = all->len_ta;
+	all->idx = 0;
+	all->nbr_p = all->len_ta / 13;
+	all->nbr_g = all->len_ta / 13;
+	while (all->nbr_p > 0)
+	{
+		if (all->len_ta <= 0)
+			break ;
+		if (check_nbr_in_list(all, all->ta[0]))
+		{
+			push_stack(&all->len_ta, all->ta, &all->len_tb, all->tb);
+			write(1, "pb\n", 3);
+			all->total_instrc++;
+			all->idx++;
+			all->nbr_p--;
+			if (all->nbr_p == 0)
+			{
+				all->group_nbrs++;
+				all->nbr_p = all->nbr_g;
+			}
+			continue ;
+		}
+		
+		if (i < j && check_nbr_in_list(all, all->ta[++i]))
+		{
+			rotate_stack(all->len_ta, all->ta);
+			write(1, "ra\n", 3);
+			i = 0;
+			j = all->len_ta;
+		}
+		else if (i < j && check_nbr_in_list(all, all->ta[--j]))
+		{
+			reverse_rotate_stack(all->len_ta, all->ta);
+			write(1, "rra\n", 4);
+			i = 0;
+			j = all->len_ta;
+		}
+	}
+	all->idx = all->len_tc - 1;
+	all->nbr_p = all->len_tc;
+	while (all->nbr_p > 0)
+	{
+		if (all->tb[0] == all->tc[all->idx])
+		{
+			push_stack(&all->len_tb, all->tb, &all->len_ta, all->ta);
+			write(1, "pa\n", 3);
+			all->total_instrc++;
+			all->idx--;
+			all->nbr_p--;
+			continue ;
+		}
+		all->index_of_nbr = get_index_of_nbr(all->len_tb, all->tb, all);
+		if (all->index_of_nbr <= (all->len_tb - all->index_of_nbr))
+		{
+			rotate_stack(all->len_tb, all->tb);
+			write(1, "rb\n", 3);
+			all->total_instrc++;
+		}
+		else
+		{
+			reverse_rotate_stack(all->len_tb, all->tb);
+			write(1, "rrb\n", 4);
+			all->total_instrc++;
+		}
+	}
 }
 
 int	main(int ac, char *av[])
@@ -333,6 +411,10 @@ int	main(int ac, char *av[])
 		else if (all->len_ta < 150)
 		{
 			less_150(all);
+		}
+		else if (all->len_ta > 150)
+		{
+			more_150(all);
 		}
 
 
@@ -362,12 +444,12 @@ int	main(int ac, char *av[])
 		// {
 		// 	printf("%d\n", all->ta[all->i]);
 		// }
-		printf("\nstack b\n");
-		all->i = -1;
-		while (++all->i < all->len_tb)
-		{
-			printf("%d\n", all->tb[all->i]);
-		}
+		// printf("\nstack b\n");
+		// all->i = -1;
+		// while (++all->i < all->len_tb)
+		// {
+		// 	printf("%d\n", all->tb[all->i]);
+		// }
 		//printf("total instruction : %d", all->total_instrc);
 	}
 	else
