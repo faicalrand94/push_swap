@@ -199,6 +199,26 @@ t_pushswap	*new_vrbs(int ac, char **av)
 	return (all);
 }
 
+int	get_max(int len, int ta[len])
+{
+	int	i;
+	int max;
+	int	pos;
+
+	i = 0;
+	max = ta[0];
+	pos = 0;
+	while (++i < len)
+	{
+		if (ta[i] > max)
+		{
+			max = ta[i];
+			pos = i;
+		}		
+	}
+	return (pos);
+}
+
 void	less_5(t_pushswap *all)
 {
 	if (all->len_tc == 2)
@@ -229,7 +249,64 @@ void	less_5(t_pushswap *all)
 			write(1, "sa\n", 3);
 		}
 	}
-
+	else if (all->len_tc > 3)
+	{
+		all->idx = 0;
+		all->nbr_p = all->len_ta - 3;
+		while (all->nbr_p > 0)
+		{
+			if (all->ta[0] == all->tc[all->idx])
+			{
+				push_stack(&all->len_ta, all->ta, &all->len_tb, all->tb);
+				write(1, "pb\n", 3);
+				all->total_instrc++;
+				all->idx++;
+				all->nbr_p--;
+				continue ;
+			}
+			all->index_of_nbr = get_index_of_nbr(all->len_ta, all->ta, all);
+			if (all->index_of_nbr <= (all->len_ta - all->index_of_nbr))
+			{
+				rotate_stack(all->len_ta, all->ta);
+				write(1, "ra\n", 3);
+				all->total_instrc++;
+			}
+			else
+			{
+				reverse_rotate_stack(all->len_ta, all->ta);
+				write(1, "rra\n", 4);
+				all->total_instrc++;
+			}
+		}
+		all->idx = all->len_ta - 1;
+		all->index_of_nbr = get_max(all->len_ta, all->ta);
+		if (all->index_of_nbr == 0)
+		{
+			rotate_stack(all->len_ta, all->ta);
+			write(1, "ra\n", 3);
+			all->total_instrc++;
+		}
+		else if (all->index_of_nbr == 1)
+		{
+			reverse_rotate_stack(all->len_ta, all->ta);
+			write(1, "rra\n", 4);
+			all->total_instrc++;
+		}
+		if (all->ta[0] > all->ta[1])
+		{
+			write(1, "sa\n", 3);
+		}
+		if (all->len_tb > 1 && all->tb[0] < all->tb[1])
+		{
+			write(1, "sb\n", 3);
+		}
+		while (all->len_tb > 0)
+		{
+			push_stack(&all->len_tb, all->tb, &all->len_ta, all->ta);
+			write(1, "pa\n", 3);
+			all->total_instrc++;
+		}		
+	}
 }
 
 void	less_20(t_pushswap *all)
@@ -437,7 +514,7 @@ int	main(int ac, char *av[])
 		rmp_t(av, ac, all->ta);
 		rmp_t(av, ac, all->tc);
 		sort_tc(all->len_tc, all->tc);
-		if (all->len_ta < 5)
+		if (all->len_ta <= 5)
 		{
 			less_5(all);
 		}
