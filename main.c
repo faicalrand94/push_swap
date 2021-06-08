@@ -6,7 +6,7 @@
 /*   By: fbouibao <fbouibao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/01 16:13:00 by fbouibao          #+#    #+#             */
-/*   Updated: 2021/06/07 19:33:21 by fbouibao         ###   ########.fr       */
+/*   Updated: 2021/06/08 19:28:25 by fbouibao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,30 +31,122 @@ typedef struct s_pushswap
 	int index_of_nbr;
 	int total_instrc;
 	int group_nbrs;
+	char **args;
+	int ac;
 }					t_pushswap;
 
-int	check_args(char **av)
+static int	get_length(char const *s, int c, int start)
 {
-	int i;
-	int cpt;
+	int	i;
 
-	i = 0;
-	while (av[++i])
-	{
-		cpt = -1;
-		if (av[i][0] == '+' || av[i][0] == '-')
-			cpt++;
-		while (av[i][++cpt])
-		{
-			if (!ft_isdigit(av[i][cpt]))
-			{
-				return (1);
-			}
-		}		
-	}
-	return (0);
+	i = start;
+	while (s[i] && s[i] != c)
+		i++;
+	return (i - start);
 }
 
+static int	count_words(char const *s, char c)
+{
+	int	i;
+	int	counter;
+	int	is_word_completed;
+
+	i = -1;
+	counter = 0;
+	is_word_completed = 1;
+	while (s[++i])
+	{
+		if (s[i] != c && is_word_completed)
+		{
+			counter++;
+			if (s[i + 1] != c)
+				is_word_completed = 0;
+		}
+		if (s[i] == c)
+			is_word_completed = 1;
+	}
+	return (counter);
+}
+
+static char	*str_allocation(char const *s, char c, int start)
+{
+	int		i;
+	int		j;
+	char	*str;
+
+	str = (char *)ft_calloc(get_length(s, c, start) + 1, sizeof(char));
+	if (!str)
+		return (0);
+	i = start - 1;
+	j = -1;
+	while (s[++i] && s[i] != c)
+		str[++j] = s[i];
+	str[j + 1] = '\0';
+	return (str);
+}
+
+static	char	**norminette_helper(char const *s, char c, char **str, int *j)
+{
+	int			is_word_completed;
+	int			i;
+
+	i = -1;
+	is_word_completed = 1;
+	while (s[++i])
+	{
+		if (s[i] != c && is_word_completed)
+		{
+			str[++*j] = str_allocation(s, c, i);
+			if (!str[*j])
+			{
+				while (*j > 0)
+					free(str[--*j]);
+				free(str);
+				return (NULL);
+			}
+			if (s[i + 1] != c)
+				is_word_completed = 0;
+		}
+		if (s[i] == c)
+			is_word_completed = 1;
+	}
+	str[*j + 1] = NULL;
+	return (str);
+}
+
+char	**ft_split(char const *s, char c)
+{
+	char		**str;
+	int			j;
+
+	j = -1;
+	if (!s)
+		return (NULL);
+	str = (char **)ft_calloc((count_words(s, c) + 1), sizeof(char *));
+	if (!str)
+		return (0);
+	if ((count_words(s, c) + 1) == 1)
+	{
+		str[0] = NULL;
+		return (str);
+	}
+	return (norminette_helper(s, c, str, &j));
+}
+
+
+
+
+void my_free(char **l)
+{
+	int i;
+
+	i = -1;
+	while (l[++i])
+	{
+		free(l[i]);
+	}
+	free(l);
+}
 
 void	ft_allc(int **ta, int la)
 {
@@ -64,16 +156,13 @@ void	ft_allc(int **ta, int la)
 }
 
 
-void sort_swap(char *ta, char *tb)
-{
-	
-}
+
 void	rmp_t(char **av, int ac, int ta[ac])
 {
 	int i;
 	int j;
 
-	i = 0;
+	i = -1;
 	j = 0;
 	while (++i < ac)
 	{
@@ -114,6 +203,16 @@ void	sort_tc(int len_tc, int tc[len_tc])
 		}
 	}
 	
+}
+	void	print_list(int len, int t[len])
+{
+		ft_putstr_fd("\n", 1);
+			int i = -1;
+	while (++i<len)
+	{
+		fprintf(stderr, "%d ", t[i]);
+		ft_putstr_fd(" ", 1);
+	}
 }
 
 void	swap_stack(int len, int ta[len])
@@ -184,18 +283,13 @@ int	get_index_of_nbr(int len, int ta[len], t_pushswap *all)
 	return (-1);
 }
 
-t_pushswap	*new_vrbs(int ac, char **av)
+t_pushswap	*new_vrbs()
 {
 	t_pushswap	*all;
 
 	all = malloc(sizeof(t_pushswap));
-	all->ta = malloc(sizeof(int) * ac);
-	all->tb = malloc(sizeof(int) * ac);
-	all->tc = malloc(sizeof(int) * ac);
-	all->len_ta = ac - 1;
-	all->len_tb = 0;
-	all->len_tc = ac - 1;
 	all->total_instrc = 0;
+	all->args = NULL;
 	return (all);
 }
 
@@ -322,6 +416,7 @@ void	less_20(t_pushswap *all)
 			all->total_instrc++;
 			all->idx++;
 			all->nbr_p--;
+
 			continue ;
 		}
 		all->index_of_nbr = get_index_of_nbr(all->len_ta, all->ta, all);
@@ -362,6 +457,8 @@ int		check_nbr_in_list(t_pushswap *all, int nbr)
 	return (0);
 }
 
+
+
 void	less_150(t_pushswap *all)
 {
 	all->group_nbrs = 1;
@@ -381,6 +478,8 @@ void	less_150(t_pushswap *all)
 			all->total_instrc++;
 			all->idx++;
 			all->nbr_p--;
+			i = 0;
+			j = all->len_ta;
 			if (all->nbr_p == 0)
 			{
 				all->group_nbrs++;
@@ -388,7 +487,6 @@ void	less_150(t_pushswap *all)
 			}
 			continue ;
 		}
-		
 		if (i < j && check_nbr_in_list(all, all->ta[++i]))
 		{
 			rotate_stack(all->len_ta, all->ta);
@@ -439,8 +537,8 @@ void	more_150(t_pushswap *all)
 	int i = 0;
 	int j = all->len_ta;
 	all->idx = 0;
-	all->nbr_p = all->len_ta / 13;
-	all->nbr_g = all->len_ta / 13;
+	all->nbr_p = all->len_ta / 12;
+	all->nbr_g = all->len_ta / 12;
 	while (all->nbr_p > 0)
 	{
 		if (all->len_ta <= 0)
@@ -504,16 +602,127 @@ void	more_150(t_pushswap *all)
 	}
 }
 
+void	add_in_list(t_pushswap	*all, char **ar)
+{
+	int i;
+	int c;
+	int c2;
+	char **tmp;
+
+	c = 0;
+	c2 = 0;
+	i = -1;
+	if (!ar)
+		return ;
+	while (ar[++i])
+		c++;
+	i = -1;
+	while (all->args && all->args[++i])
+		c2++;
+	tmp = malloc(sizeof(char *) * (c + c2) + 1);
+	i = 0;
+	while (all->args && all->args[i])
+	{
+		tmp[i] = all->args[i];
+		i++;
+	}
+	int j = 0;
+	while (ar[j])
+	{
+		tmp[i] = ar[j];
+		i++;
+		j++;
+	}
+	tmp[i] = NULL;
+	all->args = tmp;
+}
+
+void rem_args(char **av, int ac, t_pushswap	*all)
+{
+	int i;
+	char **ar;
+	int c;
+
+	i = 0;
+	c = 0;
+	while (av[++i])
+	{
+		ar = ft_split(av[i], ' ');
+		add_in_list(all, ar);
+		//my_free(ar);
+	}
+	i = -1;
+	while (all->args[++i])
+		c++;
+	all->ac = c;
+}
+
+int	check_args(char **av)
+{
+	int i;
+	int cpt;
+
+	i = 0;
+	while (av[++i])
+	{
+		cpt = -1;
+		if (av[i][0] == '+' || av[i][0] == '-')
+			cpt++;
+		
+		while (av[i][++cpt])
+		{
+			if (!ft_isdigit(av[i][cpt]))
+			{
+				return (1);
+			}
+		}		
+	}
+	return (0);
+}
+int	check_args2(char **av)
+{
+	int i;
+	int cpt;
+
+	i = 0;
+	while (av[++i])
+	{
+		if (ft_strlen(av[i]) == 0)
+			return (1);
+	}
+	return (0);
+}
+
 int	main(int ac, char *av[])
 {
 	t_pushswap	*all;
 
-	all = new_vrbs(ac, av);
+	
 	if (ac > 1)
 	{
-		rmp_t(av, ac, all->ta);
-		rmp_t(av, ac, all->tc);
+		if (check_args2(av))
+		{
+			ft_putstr_fd("Error\n", 1);
+			return (1);
+		}
+		all = new_vrbs();
+		rem_args(av, ac, all);
+		if (check_args(all->args))
+		{
+			ft_putstr_fd("Error\n", 1);
+			return (1);
+		}
+
+		all->ta = malloc(sizeof(int) * all->ac);
+		all->tb = malloc(sizeof(int) * all->ac);
+		all->tc = malloc(sizeof(int) * all->ac);
+		all->len_ta = all->ac;
+		all->len_tb = 0;
+		all->len_tc = all->ac;
+		rmp_t(all->args, all->ac, all->ta);
+		rmp_t(all->args, all->ac, all->tc);
 		sort_tc(all->len_tc, all->tc);
+
 		if (all->len_ta <= 5)
 		{
 			less_5(all);

@@ -13,14 +13,14 @@ WHITE="\033[37m"
 function push_swap()
 {
 	gcc ../main.c ../libft.a -o ../push_swap
-	TEST1=$(../push_swap $@ | ../checker_linux $@)
+	TEST1=$(../push_swap $@ | ../checker_Mac $@)
 	LENINC=$(../push_swap $@ | wc -l)
 
 	if [ "$TEST1" == "OK" ]
 	then
 		printf " $BLUE%s\n$RESET" "================="
 		printf " $GREEN%s$@\n$RESET\n"
-		printf " \n%s" "stats = OK"
+		printf "$GREEN\n%s$RESET" "stats = OK"
 		printf "\n $GREEN%s %d\n$RESET" "operations ==" $LENINC
 		printf " $BLUE%s\n$RESET" "================="
 	elif [ "$TEST1" == "KO" ]
