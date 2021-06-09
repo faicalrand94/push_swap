@@ -6,7 +6,7 @@
 /*   By: fbouibao <fbouibao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/01 16:13:00 by fbouibao          #+#    #+#             */
-/*   Updated: 2021/06/09 13:57:29 by fbouibao         ###   ########.fr       */
+/*   Updated: 2021/06/09 19:24:08 by fbouibao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,6 @@ int	main(int ac, char *av[])
 			return (1);
 		}
 		free(line);
-
 		if (check_args2(av))
 		{
 			ft_putstr_fd("Error\n", 2);

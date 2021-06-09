@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check_error_management_bonus.c                     :+:      :+:    :+:   */
+/*   check_error_management.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fbouibao <fbouibao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/09 09:42:07 by fbouibao          #+#    #+#             */
-/*   Updated: 2021/06/09 11:58:21 by fbouibao         ###   ########.fr       */
+/*   Updated: 2021/06/09 18:44:05 by fbouibao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	check_args(char **av)
 {
-	int i;
-	int cpt;
+	int	i;
+	int	cpt;
 
 	i = 0;
 	while (av[++i])
@@ -23,7 +23,6 @@ int	check_args(char **av)
 		cpt = -1;
 		if (av[i][0] == '+' || av[i][0] == '-')
 			cpt++;
-		
 		while (av[i][++cpt])
 		{
 			if (!ft_isdigit(av[i][cpt]))
@@ -34,9 +33,10 @@ int	check_args(char **av)
 	}
 	return (0);
 }
+
 int	check_args2(char **av)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (av[++i])
@@ -49,13 +49,13 @@ int	check_args2(char **av)
 
 int	check_args_dublc(int len, int ta[len])
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = -1;
 	while (++i < len)
 	{
-		j = -1;		
+		j = -1;
 		while (++j < len)
 		{
 			if (i != j && ta[i] == ta[j])
