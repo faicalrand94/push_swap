@@ -9,11 +9,11 @@ BLUE="\033[34m"
 MAGENTA="\033[35m"
 CYAN="\033[36m"
 WHITE="\033[37m"
-
+gcc ../push_swap.c ../src/*.c ../libft.a -o ../push_swap
 function push_swap()
 {
-	gcc ../main.c ../libft.a -o ../push_swap
-	TEST1=$(../push_swap $@ | ../checker_linux $@)
+	
+	TEST1=$(../push_swap $@ | ../checker_Mac $@)
 	LENINC=$(../push_swap $@ | wc -l)
 
 	if [ "$TEST1" == "OK" ]
