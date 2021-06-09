@@ -9,7 +9,7 @@ BLUE="\033[34m"
 MAGENTA="\033[35m"
 CYAN="\033[36m"
 WHITE="\033[37m"
-gcc ../push_swap.c ../src/*.c ../libft.a -o ../push_swap
+gcc ../push_swap.c ../src/*.c  -o ../push_swap
 function push_swap()
 {
 	

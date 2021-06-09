@@ -6,7 +6,7 @@
 /*   By: fbouibao <fbouibao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/09 09:39:15 by fbouibao          #+#    #+#             */
-/*   Updated: 2021/06/09 19:21:36 by fbouibao         ###   ########.fr       */
+/*   Updated: 2021/06/09 20:07:52 by fbouibao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include <unistd.h>
 # include <string.h>
 # include <stdlib.h>
-# include "libft1/libft.h"
 
 typedef struct s_pushswap
 {
@@ -71,4 +70,9 @@ int			check_nbr_in_list(t_pushswap *all, int nbr);
 void		rem_args(char **av, t_pushswap	*all);
 void		sort_tc(int len_tc, int tc[len_tc]);
 void		add_in_list(t_pushswap	*all, char **ar);
+void		*ft_calloc(size_t count, size_t size);
+int			ft_isdigit(int number);
+void		ft_putstr_fd(char *s, int fd);
+size_t		ft_strlen(char const *str);
+int			ft_strncmp(const char *s1, const char *s2, size_t n);
 #endif
