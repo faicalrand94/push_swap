@@ -8,7 +8,7 @@
             "type": "lldb",
             "request": "launch",
             "name": "Debug",
-            "program": "${workspaceFolder}/a.out",
+            "program": "${workspaceFolder}/checker",
             "args": ["3 2 8 6 4", "1"],
             "cwd": "${workspaceFolder}"
         }

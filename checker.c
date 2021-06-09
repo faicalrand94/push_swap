@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: fbouibao <fbouibao@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/01 16:13:00 by fbouibao          #+#    #+#             */
-/*   Updated: 2021/06/08 19:28:25 by fbouibao         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 # include <stdio.h>
 # include <unistd.h>
@@ -717,54 +706,62 @@ int	check_args_dublc(int len, int ta[len])
 int	main(int ac, char *av[])
 {
 	t_pushswap	*all;
-
-
+	char *insts;
+	
 	if (ac > 1)
 	{
 		if (check_args2(av))
 		{
-			ft_putstr_fd("Error\n", 2);
+			ft_putstr_fd("Error\n", 1);
 			return (1);
 		}
 		all = new_vrbs();
 		rem_args(av, ac, all);
 		if (check_args(all->args))
 		{
-			ft_putstr_fd("Error\n", 2);
+			ft_putstr_fd("Error\n", 1);
 			return (1);
 		}
+
 		all->ta = malloc(sizeof(int) * all->ac);
 		all->len_ta = all->ac;
 		rmp_t(all->args, all->ac, all->ta);
 		if (check_args_dublc(all->len_ta, all->ta))
 		{
-			ft_putstr_fd("Error\n", 2);
+			ft_putstr_fd("Error\n", 1);
 			return (1);
 		}
 		all->tb = malloc(sizeof(int) * all->ac);
 		all->tc = malloc(sizeof(int) * all->ac);
 		all->len_tb = 0;
 		all->len_tc = all->ac;
-		rmp_t(all->args, all->ac, all->ta);
+		
 		rmp_t(all->args, all->ac, all->tc);
 		sort_tc(all->len_tc, all->tc);
-
-		if (all->len_ta <= 5)
+		insts = malloc(sizeof(char) * 5);	
+		char r;
+		fprintf(stderr, "hello");
+		while (read(STDIN_FILENO, insts, 5) > 0)
 		{
-			less_5(all);
+			insts[r] = '\0';
+			ft_putstr_fd(insts, 1);
 		}
-		else if (all->len_ta < 20)
-		{
-			less_20(all);
-		}
-		else if (all->len_ta < 150)
-		{
-			less_150(all);
-		}
-		else if (all->len_ta > 150)
-		{
-			more_150(all);
-		}
+		// if (all->len_ta <= 5)
+		// {
+		// 	less_5(all);
+		// }
+		// else if (all->len_ta < 20)
+		// {
+		// 	less_20(all);
+		// }
+		// else if (all->len_ta < 150)
+		// {
+		// 	less_150(all);
+		// }
+		// else if (all->len_ta > 150)
+		// {
+		// 	more_150(all);
+		// }
 
 
 
@@ -803,7 +800,7 @@ int	main(int ac, char *av[])
 	}
 	else
 	{
-		ft_putstr_fd("Error\n", 2);
+		//ft_putstr_fd("Error\n", 1);
 	}
 	return (0);
 }

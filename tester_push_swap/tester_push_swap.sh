@@ -13,7 +13,7 @@ WHITE="\033[37m"
 function push_swap()
 {
 	gcc ../main.c ../libft.a -o ../push_swap
-	TEST1=$(../push_swap $@ | ../checker_Mac $@)
+	TEST1=$(../push_swap $@ | ../checker_linux $@)
 	LENINC=$(../push_swap $@ | wc -l)
 
 	if [ "$TEST1" == "OK" ]
