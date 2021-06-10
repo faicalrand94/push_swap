@@ -6,7 +6,7 @@
 /*   By: fbouibao <fbouibao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/09 09:47:22 by fbouibao          #+#    #+#             */
-/*   Updated: 2021/06/09 11:26:54 by fbouibao         ###   ########.fr       */
+/*   Updated: 2021/06/10 11:21:12 by fbouibao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ void	norm_list(t_pushswap *all, char **ar)
 		all->tmp[i] = all->args[i];
 		i++;
 	}
+	free(all->args);
+	all->args = NULL;
 	all->j = 0;
 	while (ar[all->j])
 	{

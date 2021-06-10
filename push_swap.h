@@ -6,7 +6,7 @@
 /*   By: fbouibao <fbouibao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/09 09:39:15 by fbouibao          #+#    #+#             */
-/*   Updated: 2021/06/09 20:07:52 by fbouibao         ###   ########.fr       */
+/*   Updated: 2021/06/10 10:37:59 by fbouibao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,4 +75,8 @@ int			ft_isdigit(int number);
 void		ft_putstr_fd(char *s, int fd);
 size_t		ft_strlen(char const *str);
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
+int			check_error_operration(char **s);
+char		*ft_strjoinchar(char *s, char c);
+int			check_sort(char **s, t_pushswap *all);
+
 #endif

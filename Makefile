@@ -6,7 +6,7 @@
 #    By: fbouibao <fbouibao@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/09 09:29:29 by fbouibao          #+#    #+#              #
-#    Updated: 2021/06/09 20:04:16 by fbouibao         ###   ########.fr        #
+#    Updated: 2021/06/10 10:38:42 by fbouibao         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ src/ps_tools1.c src/ps_tools2.c src/sort_table.c src/libft_fts.c\
 SRC_B = checker_bonus.c src_bonus/check_error_management_bonus.c\
 src_bonus/ft_split_bonus.c src_bonus/libft_fts_bonus.c\
 src_bonus/ps_instraction_tools_bonus.c src_bonus/ps_tools1_bonus.c\
-src_bonus/ps_tools2_bonus.c src_bonus/sort_table_bonus.c\
+src_bonus/ps_tools2_bonus.c src_bonus/sort_table_bonus.c src_bonus/check_sort_bonus.c\
 
 CC = gcc
 
